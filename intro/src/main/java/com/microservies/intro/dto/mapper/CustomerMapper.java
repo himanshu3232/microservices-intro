@@ -1,5 +1,6 @@
 package com.microservies.intro.dto.mapper;
 
+import com.microservies.intro.dto.AccountsDto;
 import com.microservies.intro.dto.CustomerDto;
 import com.microservies.intro.entity.CustomerEntity;
 
@@ -18,7 +19,17 @@ public final class CustomerMapper {
         return new CustomerDto(
                 customerEntity.getName()
                 , customerEntity.getMobileNumber()
-                , customerEntity.getEmail()
+                , customerEntity.getEmail(),
+                null
+        );
+    }
+
+    public static CustomerDto mapToCustomerDto(CustomerEntity customerEntity, AccountsDto accountsDto){
+        return new CustomerDto(
+                customerEntity.getName()
+                , customerEntity.getMobileNumber()
+                , customerEntity.getEmail(),
+                accountsDto
         );
     }
 }
