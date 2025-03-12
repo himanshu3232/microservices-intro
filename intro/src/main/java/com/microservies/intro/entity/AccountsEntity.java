@@ -1,13 +1,11 @@
 package com.microservies.intro.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
 @Getter @Setter @ToString @NoArgsConstructor @AllArgsConstructor
+@Table(name = "accounts")
 public class AccountsEntity extends BaseEntity{
     @Id
     private Long accountNumber;
