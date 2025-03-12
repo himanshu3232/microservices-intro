@@ -4,21 +4,24 @@ import com.microservies.intro.constants.AccountsConstants;
 import com.microservies.intro.dto.CustomerDto;
 import com.microservies.intro.dto.ResponseDto;
 import com.microservies.intro.service.IAccountsService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
+@Validated
 public class AccountsController {
 
     private final IAccountsService accountsService;
 
     @PostMapping("/create")
-    public ResponseEntity<ResponseDto> createAccount(@RequestBody CustomerDto customerDto){
+    public ResponseEntity<ResponseDto> createAccount(@Valid @RequestBody CustomerDto customerDto){
         accountsService.createAccount(customerDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -27,13 +30,18 @@ public class AccountsController {
 
     @GetMapping("/fetch")
     public ResponseEntity<CustomerDto> fetchAccountDetails(@RequestParam(name = "mobileNumber") String mobileNumber){
+        if(!mobileNumber.matches("[0-9]{10}")){
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(null);
+        }
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(accountsService.fetchAccount(mobileNumber));
     }
 
     @PutMapping("/update")
-    public ResponseEntity<ResponseDto> updateAccount(@RequestBody CustomerDto customerDto){
+    public ResponseEntity<ResponseDto> updateAccount(@Valid @RequestBody CustomerDto customerDto){
         if(customerDto != null && accountsService.updateAccount(customerDto)){
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -46,6 +54,11 @@ public class AccountsController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<ResponseDto> deleteAccount(@RequestParam String mobileNumber){
+        if(!mobileNumber.matches("[0-9]{10}")){
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(null);
+        }
         if(accountsService.deleteAccount(mobileNumber)){
             return ResponseEntity
                     .status(HttpStatus.OK)
