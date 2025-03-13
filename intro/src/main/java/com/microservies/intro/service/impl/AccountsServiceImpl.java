@@ -32,8 +32,6 @@ public class AccountsServiceImpl implements IAccountsService {
             throw new CustomerAlreadyExistsException("Customer with this mobile number already exists! " + customerDto.mobileNumber());
         }
         var customer = CustomerMapper.mapToCustomerEntity(customerDto);
-        customer.setCreatedAt(LocalDateTime.now());
-        customer.setCreatedBy(customer.getName());
         CustomerEntity savedCustomer = customerRepository.save(customer);
         AccountsEntity accounts = createNewAccount(savedCustomer);
         accountsRepository.save(accounts);
